@@ -1,6 +1,4 @@
-
 import sys
-
 
 def find_closing_bracket(str):
 	depth = 0
@@ -12,14 +10,22 @@ def find_closing_bracket(str):
 		if depth < 0:
 			return i
 
+def get_num(str, start):
+	numstr = ""
+	for i in range(start, len(str)):
+		if str[i].isdigit():
+			numstr += str[i]
+		else:
+			break
+	return int(numstr), i+1
+
 def inflate(str):
 	inflated = ""
 	i = 0
 	while i < len(str):
 		if str[i].isdigit():
-			num = int(str[i])
-			token_start = i + 2
-			token_end = i + 2 + find_closing_bracket(str[token_start:])
+			num, token_start = get_num(str, i)
+			token_end = token_start + find_closing_bracket(str[token_start:])
 			token = str[token_start : token_end]
 			inflated += inflate(token) * num
 			i = token_end
@@ -34,6 +40,8 @@ def inflate(str):
 def main():
 	assert(inflate("2[ab]3[c]2[2[2[d]]]") == "ababcccdddddddd" )
 	assert(inflate("2[a2[c]b]") == "accbaccb" )
+	assert(inflate("10[a]2[b]") == "aaaaaaaaaabb" )
 
 if __name__ == "__main__":
 	main()
+
